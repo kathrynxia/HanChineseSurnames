@@ -1,0 +1,9 @@
+data-raw
+data-csv
+logo
+^.*\.Rproj$
+^\.Rproj\.user$
+^\.travis\.yml$
+^cran-comments\.md$
+^CRAN-RELEASE$
+^LICENSE$
