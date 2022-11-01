@@ -5,23 +5,16 @@ import java.lang.*;
 public class DataAnalysisHanSurnames {
 
   public static void main(String[] args) throws FileNotFoundException {
-    File f = new File("/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"); //change to relative path but I don't know how
 
     ArrayList<String> boyCharacters = new ArrayList<>();
     ArrayList<String> girlCharacters = new ArrayList<>();
     ArrayList<String> genderNeutralCharacters = new ArrayList<>();
-
-    //readChineseCharacters(f);
-
     ArrayList<String> categories = getColumns(f);
 
-    // System.out.println(categories);
 
-    // int charIndex = categories.indexOf("name.gender");
-
-    // System.out.println(charIndex);
-    fillGenderArrays(f, girlCharacters, boyCharacters, genderNeutralCharacters, categories, 0.250);
-
+  //testing with a baby array
+    File test = new File("/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"); //change to relative path but I don't know how
+    fillGenderArrays(test, girlCharacters, boyCharacters, genderNeutralCharacters, categories, 0.250);
     System.out.println(boyCharacters);
     System.out.println();
     System.out.println(girlCharacters);
