@@ -9,18 +9,21 @@ public class DataAnalysisHanSurnames {
     ArrayList<String> boyCharacters = new ArrayList<>();
     ArrayList<String> girlCharacters = new ArrayList<>();
     ArrayList<String> genderNeutralCharacters = new ArrayList<>();
-    ArrayList<String> categories = getColumns(f);
 
 
   //testing with a baby array
     File test = new File("/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"); //change to relative path but I don't know how
+    ArrayList<String> categories = getColumns(test);
     fillGenderArrays(test, girlCharacters, boyCharacters, genderNeutralCharacters, categories, 0.250);
     System.out.println(boyCharacters);
     System.out.println();
-    System.out.println(girlCharacters);
-    System.out.println();
-    System.out.println(genderNeutralCharacters);
-    
+    // System.out.println(girlCharacters);
+    // System.out.println();
+    // System.out.println(genderNeutralCharacters);
+    ArrayList<Double> nCBoys = createParallelArray(test, categories, boyCharacters, "name.competence");
+
+    System.out.println(nCBoys);
+
 
   }
 
@@ -46,11 +49,7 @@ public class DataAnalysisHanSurnames {
     Scanner fileScan = new Scanner(f);
     int charIndex = 0;//change to indexOf
     int genderIndex = 5;//change to indexOf
-    int numGirls = 0;
-    int numBoys = 0;
-    int boyLimit = 0;
     double curGenderVal = 0.0; 
-    int count = 0;
 
 
     while (fileScan.hasNextLine()) {
@@ -86,12 +85,60 @@ public class DataAnalysisHanSurnames {
        }
 
     }
+    fileScan.close();
 
 
   }
 
 
-  //public static double getAverage
+public static ArrayList<Double> createParallelArray(File f, ArrayList<String> categories, ArrayList<String> characters, String category) throws FileNotFoundException{
+
+int targetIndex = categories.indexOf(category);
+
+ArrayList<Double> values = new ArrayList<>();
+
+//ArrayList<String> rows = new ArrayList<>();
+
+Scanner fileScan = new Scanner(f);
+
+int count = 0; 
+
+ while (fileScan.hasNextLine()) {
+
+  if (count == characters.size()){
+    break;
+  }
+
+  ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
+
+  if ((rows.indexOf(characters.get(count))) != -1){
+
+    try {
+    values.add(Double.parseDouble((rows.get(targetIndex))));
+    }
+
+    catch (Exception e) {
+
+    System.out.println("Exception: " + e);
+
+    }
+
+    count++;
+  }
+
+
+
+}
+
+fileScan.close();
+
+return values;
+
+}
+
+//   public static double getAverage
+
+// }
 
 
 
