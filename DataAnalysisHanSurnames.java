@@ -20,9 +20,11 @@ public class DataAnalysisHanSurnames {
     // System.out.println(girlCharacters);
     // System.out.println();
     // System.out.println(genderNeutralCharacters);
-    ArrayList<Double> nCBoys = createParallelArray(test, categories, boyCharacters, "name.competence");
+    ArrayList<Double> nCBoys = createParallelArrayDouble(test, categories, boyCharacters, "name.competence");
+    ArrayList<String> characters = createParallelArrayListString(test, categories, "character");
 
-    System.out.println(nCBoys);
+
+    System.out.println(characters);
     // System.out.println(getAverage(nCBoys));
 
 
@@ -114,7 +116,7 @@ public class DataAnalysisHanSurnames {
   //public static 
 
 
-public static ArrayList<Double> createParallelArray(File f, ArrayList<String> categories, ArrayList<String> characters, String category) throws FileNotFoundException, NumberFormatException{
+public static ArrayList<Double> createParallelArrayDouble(File f, ArrayList<String> categories, ArrayList<String> characters, String category) throws FileNotFoundException, NumberFormatException{
 
 int targetIndex = categories.indexOf(category);
 
@@ -209,135 +211,77 @@ return values;
 
 
 
-// public static ArrayList<String> findTop (File f, int numItems, ArrayList<String> categories) throws FileNotFoundException {//if two names have the same number of peoplw with it, it will be added to the list and the user can exclude it once the ArrayList is returned
 
-// ArrayList<String> mostPopular = new ArrayList<>();
-// int count = 0; 
-// int total = 0;
-// int indexMale = categories.indexOf("n.male");
-// int indexFemale = categories.indexOf("n.female");
-// int charIndex = 0; //ise indexof later
+public static ArrayList<String> createParallelArrayListString(File f, ArrayList<String> categories, String category) throws FileNotFoundException{
 
-// Scanner fileScan = new Scanner(f);
+int targetIndex = categories.indexOf(category);
 
-//   while (fileScan.hasNextLine()){
-  
-// ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
+ArrayList<String> values = new ArrayList<>();
 
-//     if (count < numItems){
+//ArrayList<String> rows = new ArrayList<>();
 
-//       try{
-
-//       mostPopular.add(rows.get(0));//change this to index of name
-
-//       }
-
-//       catch (Exception e) {
-
-//     System.out.println("Exception: " + e);
-
-//     }
-
-//       count ++;
-
-//       continue; 
-
-//     }
-
-//     try{
-
-//   total = Integer.parseInteger(rows.get(indexMale)) + Integer.parseInteger(rows.get(indexFemale));
-
-//     }
+Scanner fileScan = new Scanner(f);
+fileScan.nextLine();
 
 
-//       catch (Exception e) {
+ while (fileScan.hasNextLine()) {
 
-//     System.out.println("Exception: " + e);
+  ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
 
-//     }
-
-
-//   if (total > findSmallest(mostPopular)){
-  
-//     mostPopular.set(findSmallest(mostPopular), rows.get(count));
-
-//   }
-
-//   else if (total == findSmallest(mostPopular)){
-
-//     mostPopular.add(rows.get(count));
+    values.add(rows.get(targetIndex));
 
 
-//   }
+  }
 
-//   count ++;
+fileScan.close();
 
-//   }
+return values;
 
-// return mostPopular;
+}
+
+
+
+
+// public static ArrayList<String> findMostPopular (File f, ArrayList<Integer> totalNums, int length) throws FileNotFoundException{
+
+// ArrayList String allCharacters = createParallelArray
+
+
+
 
 // }
 
 
-// public static int findSmallest(ArrayList<String> arr, File f) { //returns index of the smallest number
-// ArrayList<Integer> population = new ArrayList<>();
-// Scanner fileScan = new Scanner(f);
-// int count = 0; 
-// int indexMale = categories.indexOf("n.male");
-// int indexFemale = categories.indexOf("n.female");
-
-// while (count < arr.size()){
-
-//   while (fileScan.hasNextLine()){
-
-//     ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
-
-//     if (rows.indexOf(arr.get(count)) != -1){
-
-//       try{
-//         population.add(Integer.parseInt(indexMale)+ Integer.parseInt(indexFemale));
-//       }
-
-//       catch (Exception e) {
-
-//     System.out.println("Exception: " + e);
-
-//     }
 
 
 
-//     }
 
-//     for (int i = 0; i < arr.size(); i++) {
-//     }
+ public static int findSmallest(ArrayList<Integer> arr) { //returns index of the smallest number
+    int index = 0; //
+    int smallest = arr.get(0);
+    for (int i = 0; i < arr.size(); i++) {
+      if (arr.get(i) <= smallest) { //checking if element is smaller
+        smallest = arr.get(i);; //updates each time a smaller number is found
+        index = i; //records index of smallest number
+      }
+    }
 
-
-//   }
-// }
-
-//       if (arr.get(i) <= smallest) { //checking if element is smaller
-//         smallest = arr.get(i); //updates each time a smaller number is found
-//         index = i; //records index of smallest number
-    
-//   }
-
-//       return index;
-// }
+    return index;
+  }
 
 
-// public static double getAverage(ArrayList<Double> values){
-// double total = values.get(0);//in case we have negative numbers
+public static double getAverage(ArrayList<Double> values){
+double total = values.get(0);//in case we have negative numbers
 
-// for (int i = 1; i < values.size(); i++){
+for (int i = 1; i < values.size(); i++){
 
-//   total += values.get(i);
+  total += values.get(i);
 
 
-// }
-// return total/values.size();
+}
+return total/values.size();
 
-// }
+}
 
 
 
