@@ -21,27 +21,10 @@ public class DataAnalysisHanSurnames {
     // System.out.println();
     // System.out.println(genderNeutralCharacters);
     ArrayList<Double> nCBoys = createParallelArray(test, categories, boyCharacters, "name.competence");
-
     System.out.println(nCBoys);
 
 
   }
-
-  // private static void readChineseCharacters(File f)
-  //   throws FileNotFoundException {
-  //   Scanner sc = new Scanner(f);
-  //   sc.nextLine(); // Header
-  //   // Print first line as ArrayList of Strings - Chinese characters appear properly!
-  //   ArrayList<String> firstRow = new ArrayList<String>(
-  //     Arrays.asList(sc.nextLine().split(","))
-  //   );
-  //   System.out.println(firstRow);
-  //   // Look for this specific name.
-  //   String targetName = "秀英";
-  //   System.out.println("Looking for " + targetName);
-  //   System.out.println(firstRow.get(1).equals(targetName));
-  //   sc.close();
-  // }
 
 
 
