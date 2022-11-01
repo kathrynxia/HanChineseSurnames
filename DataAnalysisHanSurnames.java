@@ -22,7 +22,7 @@ public class DataAnalysisHanSurnames {
     // System.out.println(genderNeutralCharacters);
     ArrayList<Double> nCBoys = createParallelArray(test, categories, boyCharacters, "name.competence");
     System.out.println(nCBoys);
-
+    System.out.println(getAverage(nCBoys));
 
   }
 
@@ -116,6 +116,22 @@ int count = 0;
 fileScan.close();
 
 return values;
+
+}
+
+
+public static double getAverage(ArrayList<Double> values){
+double total = values.get(0);//in case we have negative numbers
+
+for (int i = 1; i < values.size(); i++){
+
+  total += values.get(i);
+
+
+}
+return total/values.size();
+
+
 
 }
 
