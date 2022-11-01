@@ -119,7 +119,7 @@ return values;
 
 }
 
-public static ArrayList<String> findTop (File f, int numItems){
+public static ArrayList<String> findTop (File f, int numItems){//if two names have the same number of peoplw with it, it will be added to the list and the user can exclude it once the ArrayList is returned
 
 ArrayList<String> mostPopular = new ArrayList<>();
 int count = 0; 
@@ -143,8 +143,8 @@ public static int findSmallest(ArrayList<Int> arr) { //returns index of the smal
     int index = 0; //
     int smallest = arr.get(0);
     for (int i = 0; i < arr.size(); i++) {
-      if ((arr.get(i) < smallest)) { //checking if element is smaller
-        smallest = arr[i]; //updates each time a smaller number is found
+      if (arr.get(i) <= smallest) { //checking if element is smaller
+        smallest = arr.get(i); //updates each time a smaller number is found
         index = i; //records index of smallest number
       }
     }
