@@ -15,14 +15,18 @@ public class DataAnalysisHanSurnames {
     File test = new File("/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"); //change to relative path but I don't know how
     ArrayList<String> categories = getColumns(test);
     fillGenderArrays(test, girlCharacters, boyCharacters, genderNeutralCharacters, categories, 0.250);
-    System.out.println(boyCharacters);
-    System.out.println();
+    // System.out.println(boyCharacters);
+    // System.out.println();
     // System.out.println(girlCharacters);
     // System.out.println();
     // System.out.println(genderNeutralCharacters);
     ArrayList<Double> nCBoys = createParallelArray(test, categories, boyCharacters, "name.competence");
-    System.out.println(nCBoys);
-    System.out.println(getAverage(nCBoys));
+    // System.out.println(nCBoys);
+    // System.out.println(getAverage(nCBoys));
+
+    File test1 = new File("/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyPopulationData.csv");
+    System.out.println(findTop(test1, 2, categories));
+    
 
   }
 
@@ -119,30 +123,87 @@ return values;
 
 }
 
-public static ArrayList<String> findTop (File f, int numItems){//if two names have the same number of peoplw with it, it will be added to the list and the user can exclude it once the ArrayList is returned
+public static ArrayList<String> findTop (File f, int numItems, ArrayList<String> categories) throws FileNotFoundException {//if two names have the same number of peoplw with it, it will be added to the list and the user can exclude it once the ArrayList is returned
 
 ArrayList<String> mostPopular = new ArrayList<>();
 int count = 0; 
+int total = 0;
+int indexMale = categories.indexOf("n.male");
+int indexFemale = categories.indexOf("n.female");
+int charIndex = 0; //ise indexof later
 
 Scanner fileScan = new Scanner(f);
 
-  while (f.hasNextLine()){
+  while (fileScan.hasNextLine()){
+  
+ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
 
     if (count < numItems){
-      mostPopular.add()
+
+      try{
+
+      mostPopular.add(rows.get(0));//change this to index of name
+
+      }
+
+      count ++;
+
+      continue; 
 
     }
 
+  total = rows.get(indexMale) + rows.get(indexFemale);
+
+  if (total > findSmallest(mostPopular)){
+  
+    mostPopular.set(findSmallest(mostPopular), rows.get(count));
+
   }
 
+  else if (total == findSmallest(mostPopular)){
+
+    mostPopular.add(rows.get(count));
+
+
+  }
+
+  count ++;
+
+  }
+
+return mostPopular;
 
 }
 
 
-public static int findSmallest(ArrayList<Int> arr) { //returns index of the smallest number
-    int index = 0; //
-    int smallest = arr.get(0);
+public static int findSmallest(ArrayList<String> arr, File f) { //returns index of the smallest number
+ArrayList<Integer> population = new ArrayList<>();
+Scanner fileScan = new Scanner(f);
+int count = 0; 
+int indexMale = categories.indexOf("n.male");
+int indexFemale = categories.indexOf("n.female");
+
+while (count < arr.size()){
+
+  while (fileScan.hasNextLine()){
+
+    ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
+
+    if (rows.indexOf(arr.get(count)) != -1){
+
+      try{
+        population.add(Integer.parseInt(indexMale)+ Integer.parseInt(indexFemale));
+      }
+
+    }
+
     for (int i = 0; i < arr.size(); i++) {
+    }
+
+
+  }
+}
+
       if (arr.get(i) <= smallest) { //checking if element is smaller
         smallest = arr.get(i); //updates each time a smaller number is found
         index = i; //records index of smallest number
