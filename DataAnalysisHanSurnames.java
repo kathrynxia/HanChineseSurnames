@@ -21,6 +21,7 @@ public class DataAnalysisHanSurnames {
     // System.out.println();
     // System.out.println(genderNeutralCharacters);
     ArrayList<Double> nCBoys = createParallelArray(test, categories, boyCharacters, "name.competence");
+    
     // System.out.println(nCBoys);
     // System.out.println(getAverage(nCBoys));
 
