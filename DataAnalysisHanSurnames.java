@@ -15,14 +15,14 @@ public class DataAnalysisHanSurnames {
     File test = new File("/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"); //change to relative path but I don't know how
     ArrayList<String> categories = getColumns(test);
     fillGenderArrays(test, girlCharacters, boyCharacters, genderNeutralCharacters, categories, 0.250);
-    // System.out.println(boyCharacters);
+    System.out.println(boyCharacters);
     // System.out.println();
     // System.out.println(girlCharacters);
     // System.out.println();
     // System.out.println(genderNeutralCharacters);
     ArrayList<Double> nCBoys = createParallelArray(test, categories, boyCharacters, "name.competence");
 
-    // System.out.println(nCBoys);
+    System.out.println(nCBoys);
     // System.out.println(getAverage(nCBoys));
 
 
@@ -39,7 +39,7 @@ public class DataAnalysisHanSurnames {
     // System.out.println(nCBoys);
     // System.out.println(nCBoys2);
     
-    System.out.println(getTotalPeople(test1, categories));
+    //System.out.println(getTotalPeople(test1, categories));
 
   }
 
@@ -114,7 +114,7 @@ public class DataAnalysisHanSurnames {
   //public static 
 
 
-public static ArrayList<Double> createParallelArray(File f, ArrayList<String> categories, ArrayList<String> characters, String category) throws FileNotFoundException{
+public static ArrayList<Double> createParallelArray(File f, ArrayList<String> categories, ArrayList<String> characters, String category) throws FileNotFoundException, NumberFormatException{
 
 int targetIndex = categories.indexOf(category);
 
@@ -125,6 +125,7 @@ ArrayList<Double> values = new ArrayList<>();
 Scanner fileScan = new Scanner(f);
 
 int count = 0; 
+fileScan.nextLine();
 
  while (fileScan.hasNextLine()) {
 
@@ -136,16 +137,16 @@ int count = 0;
 
   if ((rows.indexOf(characters.get(count))) != -1){
 
-    try {
+    // try {
     values.add(Double.parseDouble((rows.get(targetIndex))));
-    }
+    // }
 
-    catch (Exception e) {
+    // catch (Exception e) {
 
-    System.out.println("Exception: " + e);
+    // System.out.println("Exception: " + e);
     
 
-    }
+    // }
 
     count++;
   }
