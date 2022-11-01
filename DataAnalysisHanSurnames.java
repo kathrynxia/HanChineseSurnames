@@ -21,6 +21,7 @@ public class DataAnalysisHanSurnames {
     System.out.println();
     System.out.println(genderNeutralCharacters);
     
+
   }
 
   // private static void readChineseCharacters(File f)
