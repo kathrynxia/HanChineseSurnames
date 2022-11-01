@@ -25,6 +25,7 @@ public class DataAnalysisHanSurnames {
 
 
     System.out.println(characters);
+    System.out.println(getAverage(nCBoys));
     // System.out.println(getAverage(nCBoys));
 
 
@@ -282,12 +283,6 @@ for (int i = 1; i < values.size(); i++){
 return total/values.size();
 
 }
-
-
-
-
-
-
 
 
   public static ArrayList<String> getColumns(File f) throws FileNotFoundException {
