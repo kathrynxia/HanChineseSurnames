@@ -119,6 +119,39 @@ return values;
 
 }
 
+public static ArrayList<String> findTop (File f, int numItems){
+
+ArrayList<String> mostPopular = new ArrayList<>();
+int count = 0; 
+
+Scanner fileScan = new Scanner(f);
+
+  while (f.hasNextLine()){
+
+    if (count < numItems){
+      mostPopular.add()
+
+    }
+
+  }
+
+
+}
+
+
+public static int findSmallest(ArrayList<Int> arr) { //returns index of the smallest number
+    int index = 0; //
+    int smallest = arr.get(0);
+    for (int i = 0; i < arr.size(); i++) {
+      if ((arr.get(i) < smallest)) { //checking if element is smaller
+        smallest = arr[i]; //updates each time a smaller number is found
+        index = i; //records index of smallest number
+      }
+    }
+
+    return index;
+  }
+
 
 public static double getAverage(ArrayList<Double> values){
 double total = values.get(0);//in case we have negative numbers
@@ -131,9 +164,10 @@ for (int i = 1; i < values.size(); i++){
 }
 return total/values.size();
 
-
-
 }
+
+
+
 
 //   public static double getAverage
 
