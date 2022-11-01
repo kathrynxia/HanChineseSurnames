@@ -21,7 +21,7 @@ public class DataAnalysisHanSurnames {
     // System.out.println();
     // System.out.println(genderNeutralCharacters);
     ArrayList<Double> nCBoys = createParallelArray(test, categories, boyCharacters, "name.competence");
-    
+
     // System.out.println(nCBoys);
     // System.out.println(getAverage(nCBoys));
 
@@ -43,27 +43,19 @@ public class DataAnalysisHanSurnames {
 
   }
 
-  public static ArrayList<Integer> getTotalPeople (File f, ArrayList<String> categories) throws FileNotFoundException{
+  public static ArrayList<Integer> getTotalPeople (File f, ArrayList<String> categories) throws FileNotFoundException, NumberFormatException{
 
   ArrayList<Integer> totalPeople = new ArrayList<>();
   int numMale = categories.indexOf("n.male");
   int numFemale = categories.indexOf("n.female");
   Scanner fileScan = new Scanner (f);
+  fileScan.nextLine();
 
   while (fileScan.hasNextLine()){
 
     ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
 
-     try {
-
     totalPeople.add(Integer.parseInt(rows.get(numMale)) + Integer.parseInt(rows.get(numFemale)));
-     }
-
-     catch (Exception e) {
-
-        System.out.println("Exception: " + e);
-
-       }
 
   }
 
@@ -79,7 +71,7 @@ public class DataAnalysisHanSurnames {
     int charIndex = 0;//change to indexOf
     int genderIndex = 5;//change to indexOf
     double curGenderVal = 0.0; 
-
+    fileScan.nextLine();
 
     while (fileScan.hasNextLine()) {
       // String line = fileScan.nextLine();
@@ -87,7 +79,7 @@ public class DataAnalysisHanSurnames {
 
       String[] row = fileScan.nextLine().split(",");
 
-       try {
+      //  try {
       curGenderVal = Double.parseDouble(row[genderIndex]);
 
       if (curGenderVal > Math.abs(limit)){
@@ -105,13 +97,13 @@ public class DataAnalysisHanSurnames {
          genderNeutralCharacters.add(row[charIndex]);
 
       }
-       }
+      //  }
 
-       catch (Exception e) {
+      //  catch (Exception e) {
 
-        System.out.println("Exception: " + e);
+      //   System.out.println("Exception: " + e);
 
-       }
+      //  }
 
     }
     fileScan.close();
