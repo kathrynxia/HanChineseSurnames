@@ -1,36 +1,57 @@
 import java.io.*;
-import java.util.*;
 import java.lang.*;
+import java.util.*;
 
 public class DataAnalysisHanSurnames {
 
-  public static void main(String[] args) throws FileNotFoundException, NumberFormatException {
-
+  public static void main(String[] args)
+    throws FileNotFoundException, NumberFormatException {
     ArrayList<String> boyCharacters = new ArrayList<>();
     ArrayList<String> girlCharacters = new ArrayList<>();
     ArrayList<String> genderNeutralCharacters = new ArrayList<>();
 
-
-  //testing with a baby array
-    File test = new File("/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"); //change to relative path but I don't know how
+    //testing with a baby array
+    File test = new File(
+      "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
+    ); //change to relative path but I don't know how
     ArrayList<String> categories = getColumns(test);
-    fillGenderArrays(test, girlCharacters, boyCharacters, genderNeutralCharacters, categories, 0.250);
-    System.out.println(boyCharacters);
+    fillGenderArrays(
+      test,
+      girlCharacters,
+      boyCharacters,
+      genderNeutralCharacters,
+      categories,
+      0.250
+    );
+    //System.out.println(boyCharacters);
     // System.out.println();
     // System.out.println(girlCharacters);
     // System.out.println();
     // System.out.println(genderNeutralCharacters);
-    ArrayList<Double> nCBoys = createParallelArrayDouble(test, categories, boyCharacters, "name.competence");
-    ArrayList<String> characters = createParallelArrayListString(test, categories, "character");
+    ArrayList<Double> nCBoys = createParallelArrayDouble(
+      test,
+      categories,
+      boyCharacters,
+      "name.competence"
+    );
+    ArrayList<String> characters = createParallelArrayListString(
+      test,
+      categories,
+      "character"
+    );
+    ArrayList<Integer> total = getTotalPeople(test, categories);
 
-
+    System.out.println(total);
     System.out.println(characters);
-    System.out.println(getAverage(nCBoys));
+    System.out.println(findMostPopular(test, categories, 4));
+    // System.out.println(getAverage(nCBoys));
+    // System.out.println(findMax(total));
+    // System.out.println(findMax(total, total.get((findMax(total)))));
     // System.out.println(getAverage(nCBoys));
 
-
-    File test1 = new File("/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv");
-
+    // File test1 = new File(
+    //   "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
+    // );
     // ArrayList<Integer> nCBoys2 = createParallelArrayInt(test1, categories, boyCharacters, "n.male");
     // ArrayList<Integer> nCBoys2 = createParallelArrayInt(test1, categories, girlCharacters, "n.male");
     // // System.out.println(findTop(test1, 2, categories));
@@ -41,39 +62,47 @@ public class DataAnalysisHanSurnames {
     // System.out.println(boyCharacters);
     // System.out.println(nCBoys);
     // System.out.println(nCBoys2);
-    
+
     //System.out.println(getTotalPeople(test1, categories));
 
   }
 
-  public static ArrayList<Integer> getTotalPeople (File f, ArrayList<String> categories) throws FileNotFoundException, NumberFormatException{
-
-  ArrayList<Integer> totalPeople = new ArrayList<>();
-  int numMale = categories.indexOf("n.male");
-  int numFemale = categories.indexOf("n.female");
-  Scanner fileScan = new Scanner (f);
-  fileScan.nextLine();
-
-  while (fileScan.hasNextLine()){
-
-    ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
-
-    totalPeople.add(Integer.parseInt(rows.get(numMale)) + Integer.parseInt(rows.get(numFemale)));
-
-  }
-
-  return totalPeople;
-
-
-  }
-
-
-
-  public static void fillGenderArrays(File f, ArrayList<String> girlCharacters, ArrayList<String> boyCharacters, ArrayList<String> genderNeutralCharacters, ArrayList<String> categories, double limit) throws FileNotFoundException{
+  public static ArrayList<Integer> getTotalPeople(
+    File f,
+    ArrayList<String> categories
+  ) throws FileNotFoundException, NumberFormatException {
+    ArrayList<Integer> totalPeople = new ArrayList<>();
+    int numMale = categories.indexOf("n.male");
+    int numFemale = categories.indexOf("n.female");
     Scanner fileScan = new Scanner(f);
-    int charIndex = 0;//change to indexOf
-    int genderIndex = 5;//change to indexOf
-    double curGenderVal = 0.0; 
+    fileScan.nextLine();
+
+    while (fileScan.hasNextLine()) {
+      ArrayList<String> rows = new ArrayList<String>(
+        Arrays.asList(fileScan.nextLine().split(","))
+      );
+
+      totalPeople.add(
+        Integer.parseInt(rows.get(numMale)) +
+        Integer.parseInt(rows.get(numFemale))
+      );
+    }
+
+    return totalPeople;
+  }
+
+  public static void fillGenderArrays(
+    File f,
+    ArrayList<String> girlCharacters,
+    ArrayList<String> boyCharacters,
+    ArrayList<String> genderNeutralCharacters,
+    ArrayList<String> categories,
+    double limit
+  ) throws FileNotFoundException {
+    Scanner fileScan = new Scanner(f);
+    int charIndex = 0; //change to indexOf
+    int genderIndex = 5; //change to indexOf
+    double curGenderVal = 0.0;
     fileScan.nextLine();
 
     while (fileScan.hasNextLine()) {
@@ -85,20 +114,12 @@ public class DataAnalysisHanSurnames {
       //  try {
       curGenderVal = Double.parseDouble(row[genderIndex]);
 
-      if (curGenderVal > Math.abs(limit)){
+      if (curGenderVal > Math.abs(limit)) {
         boyCharacters.add(row[charIndex]);
-      }
-
-      else if (curGenderVal < (-1 * Math.abs(limit))){
-
+      } else if (curGenderVal < (-1 * Math.abs(limit))) {
         girlCharacters.add(row[charIndex]);
-
-      }
-
-      else{
-
-         genderNeutralCharacters.add(row[charIndex]);
-
+      } else {
+        genderNeutralCharacters.add(row[charIndex]);
       }
       //  }
 
@@ -110,159 +131,158 @@ public class DataAnalysisHanSurnames {
 
     }
     fileScan.close();
-
-
   }
 
-  //public static 
+  //public static
 
+  public static ArrayList<Double> createParallelArrayDouble(
+    File f,
+    ArrayList<String> categories,
+    ArrayList<String> characters,
+    String category
+  ) throws FileNotFoundException, NumberFormatException {
+    int targetIndex = categories.indexOf(category);
 
-public static ArrayList<Double> createParallelArrayDouble(File f, ArrayList<String> categories, ArrayList<String> characters, String category) throws FileNotFoundException, NumberFormatException{
+    ArrayList<Double> values = new ArrayList<>();
 
-int targetIndex = categories.indexOf(category);
+    //ArrayList<String> rows = new ArrayList<>();
 
-ArrayList<Double> values = new ArrayList<>();
+    Scanner fileScan = new Scanner(f);
 
-//ArrayList<String> rows = new ArrayList<>();
+    int count = 0;
+    fileScan.nextLine();
 
-Scanner fileScan = new Scanner(f);
+    while (fileScan.hasNextLine()) {
+      if (count == characters.size()) {
+        break;
+      }
 
-int count = 0; 
-fileScan.nextLine();
+      ArrayList<String> rows = new ArrayList<String>(
+        Arrays.asList(fileScan.nextLine().split(","))
+      );
 
- while (fileScan.hasNextLine()) {
+      if ((rows.indexOf(characters.get(count))) != -1) {
+        // try {
+        values.add(Double.parseDouble((rows.get(targetIndex))));
+        // }
 
-  if (count == characters.size()){
-    break;
-  }
+        // catch (Exception e) {
 
-  ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
+        // System.out.println("Exception: " + e);
 
-  if ((rows.indexOf(characters.get(count))) != -1){
+        // }
 
-    // try {
-    values.add(Double.parseDouble((rows.get(targetIndex))));
-    // }
-
-    // catch (Exception e) {
-
-    // System.out.println("Exception: " + e);
-    
-
-    // }
-
-    count++;
-  }
-
-
-
-}
-
-fileScan.close();
-
-return values;
-
-}
-
-
-public static ArrayList<Integer> createParallelArrayInt(File f, ArrayList<String> categories, ArrayList<String> characters, String category) throws FileNotFoundException{
-
-int targetIndex = categories.indexOf(category);
-
-ArrayList<Integer> values = new ArrayList<>();
-
-//ArrayList<String> rows = new ArrayList<>();
-
-Scanner fileScan = new Scanner(f);
-
-int count = 0; 
-
- while (fileScan.hasNextLine()) {
-
-  if (count == characters.size()){
-    break;
-  }
-
-  ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
-
-  if ((rows.indexOf(characters.get(count))) != -1){
-
-    try {
-    values.add(Integer.parseInt((rows.get(targetIndex))));
+        count++;
+      }
     }
 
-    catch (Exception e) {
+    fileScan.close();
 
-    System.out.println("Exception: " + e);
+    return values;
+  }
 
+  public static ArrayList<Integer> createParallelArrayInt(
+    File f,
+    ArrayList<String> categories,
+    ArrayList<String> characters,
+    String category
+  ) throws FileNotFoundException {
+    int targetIndex = categories.indexOf(category);
+
+    ArrayList<Integer> values = new ArrayList<>();
+
+    //ArrayList<String> rows = new ArrayList<>();
+
+    Scanner fileScan = new Scanner(f);
+
+    int count = 0;
+
+    while (fileScan.hasNextLine()) {
+      if (count == characters.size()) {
+        break;
+      }
+
+      ArrayList<String> rows = new ArrayList<String>(
+        Arrays.asList(fileScan.nextLine().split(","))
+      );
+
+      if ((rows.indexOf(characters.get(count))) != -1) {
+        try {
+          values.add(Integer.parseInt((rows.get(targetIndex))));
+        } catch (Exception e) {
+          System.out.println("Exception: " + e);
+        }
+
+        count++;
+      }
     }
 
-    count++;
+    fileScan.close();
+
+    return values;
+  }
+
+  public static ArrayList<String> createParallelArrayListString(
+    File f,
+    ArrayList<String> categories,
+    String category
+  ) throws FileNotFoundException {
+    int targetIndex = categories.indexOf(category);
+
+    ArrayList<String> values = new ArrayList<>();
+
+    //ArrayList<String> rows = new ArrayList<>();
+
+    Scanner fileScan = new Scanner(f);
+    fileScan.nextLine();
+
+    while (fileScan.hasNextLine()) {
+      ArrayList<String> rows = new ArrayList<String>(
+        Arrays.asList(fileScan.nextLine().split(","))
+      );
+
+      values.add(rows.get(targetIndex));
+    }
+
+    fileScan.close();
+
+    return values;
+  }
+
+  public static ArrayList<String> findMostPopular(
+    File f,
+    ArrayList<String> categories,
+    int length
+  ) throws FileNotFoundException {
+    ArrayList<String> allCharacters = createParallelArrayListString(
+      f,
+      categories,
+      "character"
+    );
+
+    ArrayList<Integer> totalNum = getTotalPeople(f, categories);
+
+    ArrayList<String> mostPopularChars = new ArrayList<>();
+
+    for (int i = 0; i < length; i++) {
+        mostPopularChars.add(allCharacters.get(findMax(totalNum)));
+        allCharacters.remove(findMax(totalNum));
+        totalNum.remove(findMax(totalNum));
+    }
+
+    return mostPopularChars;
   }
 
 
 
-}
 
-fileScan.close();
-
-return values;
-
-}
-
-
-
-
-public static ArrayList<String> createParallelArrayListString(File f, ArrayList<String> categories, String category) throws FileNotFoundException{
-
-int targetIndex = categories.indexOf(category);
-
-ArrayList<String> values = new ArrayList<>();
-
-//ArrayList<String> rows = new ArrayList<>();
-
-Scanner fileScan = new Scanner(f);
-fileScan.nextLine();
-
-
- while (fileScan.hasNextLine()) {
-
-  ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
-
-    values.add(rows.get(targetIndex));
-
-
-  }
-
-fileScan.close();
-
-return values;
-
-}
-
-
-
-
-// public static ArrayList<String> findMostPopular (File f, ArrayList<Integer> totalNums, int length) throws FileNotFoundException{
-
-// ArrayList String allCharacters = createParallelArray
-
-
-
-
-// }
-
-
-
-
-
-
- public static int findSmallest(ArrayList<Integer> arr) { //returns index of the smallest number
+  public static int findMax(ArrayList<Integer> arr) {
     int index = 0; //
-    int smallest = arr.get(0);
+    int largest = arr.get(0);
     for (int i = 0; i < arr.size(); i++) {
-      if (arr.get(i) <= smallest) { //checking if element is smaller
-        smallest = arr.get(i);; //updates each time a smaller number is found
+      if (arr.get(i) >= largest) { //checking if element is smaller
+        largest = arr.get(i);
+        //updates each time a smaller number is found
         index = i; //records index of smallest number
       }
     }
@@ -270,22 +290,31 @@ return values;
     return index;
   }
 
+  public static int findSmallest(ArrayList<Integer> arr) { //returns index of the smallest number
+    int index = 0; //
+    int smallest = arr.get(0);
+    for (int i = 0; i < arr.size(); i++) {
+      if (arr.get(i) <= smallest) { //checking if element is smaller
+        smallest = arr.get(i);
+        //updates each time a smaller number is found
+        index = i; //records index of smallest number
+      }
+    }
 
-public static double getAverage(ArrayList<Double> values){
-double total = values.get(0);//in case we have negative numbers
+    return index;
+  }
 
-for (int i = 1; i < values.size(); i++){
+  public static double getAverage(ArrayList<Double> values) {
+    double total = values.get(0); //in case we have negative numbers
 
-  total += values.get(i);
+    for (int i = 1; i < values.size(); i++) {
+      total += values.get(i);
+    }
+    return total / values.size();
+  }
 
-
-}
-return total/values.size();
-
-}
-
-
-  public static ArrayList<String> getColumns(File f) throws FileNotFoundException {
+  public static ArrayList<String> getColumns(File f)
+    throws FileNotFoundException {
     Scanner fileScan = new Scanner(f); //anonymous object
 
     String[] firstLineArr = fileScan.nextLine().split(","); //assumes first line is header, grabs it and splits it by comma
