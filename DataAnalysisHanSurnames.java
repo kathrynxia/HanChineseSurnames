@@ -6,64 +6,37 @@ public class DataAnalysisHanSurnames {
 
   public static void main(String[] args)
     throws FileNotFoundException, NumberFormatException {
+
+
+    File test = new File(
+      "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
+    );
+
+
+      printAverageNameValues(test);
+   
+
+  }
+
+  public static void printAverageNameValues(File f) throws FileNotFoundException {
     ArrayList<String> boyCharacters = new ArrayList<>();
     ArrayList<String> girlCharacters = new ArrayList<>();
     ArrayList<String> genderNeutralCharacters = new ArrayList<>();
 
-    //testing with a baby array
-    File test = new File(
-      "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
-    ); //change to relative path but I don't know how
-    ArrayList<String> categories = getColumns(test);
-    fillGenderArrays(
-      test,
+    ArrayList<String> categories = getColumns(f);
+
+     fillGenderArrays(
+      f,
       girlCharacters,
       boyCharacters,
       genderNeutralCharacters,
       categories,
       0.250
-    );
-    //System.out.println(boyCharacters);
-    // System.out.println();
-    // System.out.println(girlCharacters);
-    // System.out.println();
-    // System.out.println(genderNeutralCharacters);
-    ArrayList<Double> nCBoys = createParallelArrayDouble(
-      test,
-      categories,
-      boyCharacters,
-      "name.competence"
-    );
-    ArrayList<String> characters = createParallelArrayListString(
-      test,
-      categories,
-      "character"
-    );
-    ArrayList<Integer> total = getTotalPeople(test, categories);
+    ); 
 
-    System.out.println(total);
-    System.out.println(characters);
-    System.out.println(findMostPopular(test, categories, 4));
-    // System.out.println(getAverage(nCBoys));
-    // System.out.println(findMax(total));
-    // System.out.println(findMax(total, total.get((findMax(total)))));
-    // System.out.println(getAverage(nCBoys));
+    double avgGirlValence = getAverage(createParallelArrayDouble(f, categories, girlCharacters, "name.valence"));
 
-    // File test1 = new File(
-    //   "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
-    // );
-    // ArrayList<Integer> nCBoys2 = createParallelArrayInt(test1, categories, boyCharacters, "n.male");
-    // ArrayList<Integer> nCBoys2 = createParallelArrayInt(test1, categories, girlCharacters, "n.male");
-    // // System.out.println(findTop(test1, 2, categories));
-
-    // ArrayList<Integer> totalNum = createParallelArrayInt(test1, categories, girlCharacters);
-
-    // System.out.println(categories.indexOf("character"));
-    // System.out.println(boyCharacters);
-    // System.out.println(nCBoys);
-    // System.out.println(nCBoys2);
-
-    //System.out.println(getTotalPeople(test1, categories));
+    System.out.println(avgGirlValence);
 
   }
 
@@ -325,4 +298,7 @@ public class DataAnalysisHanSurnames {
 
     return headers;
   }
+
+
+
 }
