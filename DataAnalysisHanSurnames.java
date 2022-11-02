@@ -6,39 +6,140 @@ public class DataAnalysisHanSurnames {
 
   public static void main(String[] args)
     throws FileNotFoundException, NumberFormatException {
+    File givenName = new File(
+      "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/ChineseNames-main/data-csv/givenname.csv"
+    );
 
+    String[] nameTraits = { "name.valence", "name.competence", "name.warmth" };
 
-    File test = new File(
+    //name valence: positivity of character meaning), name warmth/morality: warmness, name competence: assertiveness
+
+    //printAverageNameValues(givenName, nameTraits);
+    File baby = new File(
       "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
     );
 
+    ArrayList<String> boyCharacters = new ArrayList<>();
+    ArrayList<String> girlCharacters = new ArrayList<>();
+    ArrayList<String> genderNeutralCharacters = new ArrayList<>();
 
-      printAverageNameValues(test);
-   
+    ArrayList<String> categories = getColumns(baby);
+
+    //not 4, 10, 11, 12
+
+    fillGenderArrays(
+      baby,
+      girlCharacters,
+      boyCharacters,
+      genderNeutralCharacters,
+      categories,
+      0.250
+    );
+
+  ArrayList<String> highRank = findHighestRanked(baby, categories, 5, "name.valence");
+
+
+  System.out.println(highRank);
+    
+
+     File top1000name = new File(
+      "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/ChineseNames-main/data-csv/top1000name.prov.csv"
+    );
+
+    File population = new File(
+      "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/ChineseNames-main/data-csv/population.csv"
+    );
+
+
+
+
+
+    //printPercentCommonCharacters(baby, top1000name, population, 2);
+
+
+
 
   }
 
-  public static void printAverageNameValues(File f) throws FileNotFoundException {
+  public static void printAverageNameValues(File f, String[] nameTraits)
+    throws FileNotFoundException {
+    //ArrayList<ArrayList<Double>> allArrayLists = new ArrayList<>();
     ArrayList<String> boyCharacters = new ArrayList<>();
     ArrayList<String> girlCharacters = new ArrayList<>();
     ArrayList<String> genderNeutralCharacters = new ArrayList<>();
 
     ArrayList<String> categories = getColumns(f);
 
-     fillGenderArrays(
+    //not 4, 10, 11, 12
+
+    fillGenderArrays(
       f,
       girlCharacters,
       boyCharacters,
       genderNeutralCharacters,
       categories,
       0.250
-    ); 
+    );
 
-    double avgGirlValence = getAverage(createParallelArrayDouble(f, categories, girlCharacters, "name.valence"));
+    ArrayList<Double> girlValues = new ArrayList<>();
+    ArrayList<Double> boyValues = new ArrayList<>();
+    ArrayList<Double> genderNeutralValues = new ArrayList<>();
 
-    System.out.println(avgGirlValence);
+    for (int i = 0; i < nameTraits.length; i++) {
+      girlValues.add(
+        getAverage(
+          createParallelArrayListDouble(
+            f,
+            categories,
+            girlCharacters,
+            nameTraits[i]
+          )
+        )
+      );
+      boyValues.add(
+        getAverage(
+          createParallelArrayListDouble(f, categories, boyCharacters, nameTraits[i])
+        )
+      );
+      genderNeutralValues.add(
+        getAverage(
+          createParallelArrayListDouble(
+            f,
+            categories,
+            genderNeutralCharacters,
+            nameTraits[i]
+          )
+        )
+      );
+    }
+    for (int i = 0; i < nameTraits.length; i++) {
+      System.out.println("index " + i + ": " + nameTraits[i]);
+    }
+    System.out.println();
+    System.out.println("Girls: " + girlValues);
+    System.out.println("Boys: " + boyValues);
+    System.out.println("Gender Neutral: " + genderNeutralValues);
+
+
+
 
   }
+
+
+  // public static void commonCharactersRatings (File givenName, File top1000name, File population, int numItems) throws FileNotFoundException{
+
+
+  // ArrayList<String> popularChars = findMostPopular(givenName, givenNameCategories, numItems);
+  // ArrayList<Double> popularCharsValues = new ArrayList<>();
+
+
+
+
+  
+  // }
+
+
+
 
   public static ArrayList<Integer> getTotalPeople(
     File f,
@@ -108,7 +209,7 @@ public class DataAnalysisHanSurnames {
 
   //public static
 
-  public static ArrayList<Double> createParallelArrayDouble(
+  public static ArrayList<Double> createParallelArrayListDouble(
     File f,
     ArrayList<String> categories,
     ArrayList<String> characters,
@@ -154,12 +255,16 @@ public class DataAnalysisHanSurnames {
     return values;
   }
 
-  public static ArrayList<Integer> createParallelArrayInt(
+
+
+
+
+  public static ArrayList<Integer> createParallelArrayListInt(
     File f,
     ArrayList<String> categories,
     ArrayList<String> characters,
     String category
-  ) throws FileNotFoundException {
+  ) throws FileNotFoundException, NumberFormatException {
     int targetIndex = categories.indexOf(category);
 
     ArrayList<Integer> values = new ArrayList<>();
@@ -180,11 +285,9 @@ public class DataAnalysisHanSurnames {
       );
 
       if ((rows.indexOf(characters.get(count))) != -1) {
-        try {
+    
           values.add(Integer.parseInt((rows.get(targetIndex))));
-        } catch (Exception e) {
-          System.out.println("Exception: " + e);
-        }
+        
 
         count++;
       }
@@ -238,9 +341,9 @@ public class DataAnalysisHanSurnames {
     ArrayList<String> mostPopularChars = new ArrayList<>();
 
     for (int i = 0; i < length; i++) {
-        mostPopularChars.add(allCharacters.get(findMax(totalNum)));
-        allCharacters.remove(findMax(totalNum));
-        totalNum.remove(findMax(totalNum));
+      mostPopularChars.add(allCharacters.get(findMax(totalNum)));
+      allCharacters.remove(findMax(totalNum));
+      totalNum.remove(findMax(totalNum));
     }
 
     return mostPopularChars;
@@ -249,9 +352,54 @@ public class DataAnalysisHanSurnames {
 
 
 
+   public static ArrayList<String> findHighestRanked(
+    File f,
+    ArrayList<String> categories,
+    int length,
+    String category
+  ) throws FileNotFoundException {
+    ArrayList<String> allCharacters = createParallelArrayListString(
+      f,
+      categories,
+      "character"
+    );
+
+    System.out.println(allCharacters);
+
+    ArrayList<String> highestRanked = new ArrayList<>();
+
+    ArrayList<Double> charValues = createParallelArrayListDouble(f, categories, allCharacters, category);
+
+    for (int i = 0; i < length; i++) {
+      highestRanked.add(allCharacters.get(findMaxDouble(charValues)));
+      allCharacters.remove(findMaxDouble(charValues));
+      charValues.remove(findMaxDouble(charValues));
+    }
+
+    return highestRanked;
+  }
+
+
+
+
+
   public static int findMax(ArrayList<Integer> arr) {
     int index = 0; //
     int largest = arr.get(0);
+    for (int i = 0; i < arr.size(); i++) {
+      if (arr.get(i) >= largest) { //checking if element is smaller
+        largest = arr.get(i);
+        //updates each time a smaller number is found
+        index = i; //records index of smallest number
+      }
+    }
+
+    return index;
+  }
+
+    public static int findMaxDouble(ArrayList<Double> arr) {
+    int index = 0; //
+    double largest = arr.get(0);
     for (int i = 0; i < arr.size(); i++) {
       if (arr.get(i) >= largest) { //checking if element is smaller
         largest = arr.get(i);
@@ -298,7 +446,4 @@ public class DataAnalysisHanSurnames {
 
     return headers;
   }
-
-
-
 }
