@@ -20,11 +20,12 @@ public class DataAnalysisHanSurnames {
 
   public static void printAverageNameValues(File f, String[] nameTraits)
     throws FileNotFoundException {//throwing the exception in case the file does not exist
+
     ArrayList<String> boyCharacters = new ArrayList<>();
     ArrayList<String> girlCharacters = new ArrayList<>();
     ArrayList<String> genderNeutralCharacters = new ArrayList<>();
     ArrayList<String> categories = getColumns(f);//saving the first line of the file, which are the categories of the data, into an ArrayList
-    int ind = 0;//initializing and index value that we will use to make parallel arrays
+    int ind = 0;//declaring and initializing and index value that we will use to make parallel arrays
 
     fillGenderArrays(
       f,
@@ -43,9 +44,11 @@ public class DataAnalysisHanSurnames {
 
     for (int i = 0; i < nameTraits.length; i++) {
       ind = categories.indexOf(nameTraits[i]);//the index of the name of the column of the data set we are isolating for the parallel array
+
+      //creating parallel ArraysLists with the trait at the index i of nameTraits, and then taking the average of all those ArrayLists and saving the values in another ArrayList
       girlValues.add(
         getAverage(
-          createParallelArrayListDouble(//creating a parallel array with the trait at the index i of nameTraits
+          createParallelArrayListDouble(
             f,
             categories,
             girlCharacters,
@@ -77,6 +80,8 @@ public class DataAnalysisHanSurnames {
         )
       );
     }
+
+    //printing out the arrays so the format is easier to read
     for (int i = 0; i < nameTraits.length; i++) {
       System.out.println("index " + i + ": " + nameTraits[i]);
     }
@@ -87,25 +92,30 @@ public class DataAnalysisHanSurnames {
     System.out.println();
   }
 
-  public static void compareCommonAverageCharacterRatings(
+  public static void compareCommonAverageCharacterRatings(//compares the most common characters ratings with the highest rated characters
     File givenName,
     int numItems,
     String[] nameTraits,
     String indName
-  ) throws FileNotFoundException { //compares the most common characters ratings with the highest rated characters
-    ArrayList<String> categories = getColumns(givenName);
+  ) throws FileNotFoundException { 
+
+    ArrayList<String> categories = getColumns(givenName);//getting the categories
+
     ArrayList<String> mostPopular = findMostPopular(
       givenName,
       categories,
       numItems
-    );
-    ArrayList<String> highestRanked = new ArrayList<>();
-    int ind = 0;
+    );//getting the most popular characters, length is numItems
 
-    for (int i = 0; i < nameTraits.length; i++) {
+    ArrayList<String> highestRanked = new ArrayList<>();//empty ArrayList that will be added to
+    int ind = 0;//index variable
+
+    for (int i = 0; i < nameTraits.length; i++) {//printing for each of the strings in the nameTraits array
       ind = categories.indexOf(nameTraits[i]);
       System.out.println(nameTraits[i] + ": ");
-      System.out.println("Most popular: " + mostPopular);
+      System.out.println("Most popular: " + mostPopular);//prints the most popular characters 
+
+      //prints the trait value for each of the most popular characters
       System.out.println(
         createParallelArrayListDouble(
           givenName,
@@ -117,9 +127,11 @@ public class DataAnalysisHanSurnames {
       );
       System.out.println();
 
+
       highestRanked =
-        findHighestRanked(givenName, categories, numItems, nameTraits[i], ind);
+        findHighestRanked(givenName, categories, numItems, nameTraits[i], ind);//getting the #numItems highest ranking characters
       System.out.println("Highest Ranked: " + highestRanked);
+      //printing the values for the #numItems highest ranking characters for each trait
       System.out.println(
         createParallelArrayListDouble(
           givenName,
@@ -136,54 +148,69 @@ public class DataAnalysisHanSurnames {
   }
 
   public static ArrayList<Integer> getTotalPeople(
+    //gets the total amount of people that a specific character in their name for each given name character 
     File f,
     ArrayList<String> categories
   ) throws FileNotFoundException, NumberFormatException {
     ArrayList<Integer> totalPeople = new ArrayList<>();
+
+    // gets the indexs of n.male and n.female in the categories ArrayList passed in. Pains me because it's not gender inclusive, but that's unfortunately how it is. 
     int numMale = categories.indexOf("n.male");
     int numFemale = categories.indexOf("n.female");
-    Scanner fileScan = new Scanner(f);
-    fileScan.nextLine();
+    Scanner fileScan = new Scanner(f);//new Scanner object to scan the file
+    fileScan.nextLine();//skipping the first line because the first line are the categories, not the actual values
 
-    while (fileScan.hasNextLine()) {
+    while (fileScan.hasNextLine()) {//until there are no more lines in the file
       ArrayList<String> rows = new ArrayList<String>(
-        Arrays.asList(fileScan.nextLine().split(","))
+        Arrays.asList(fileScan.nextLine().split(","))//take the first row of the array (a string value) and passing in a delimiter (","), 
+        //that splits it into seperate indexes in the ArrayList
       );
 
-      totalPeople.add(
-        Integer.parseInt(rows.get(numMale)) +
-        Integer.parseInt(rows.get(numFemale))
+      totalPeople.add(//add the totalPeople array the total amount of people who have a specific character in their given name
+        Integer.parseInt(rows.get(numMale)) + Integer.parseInt(rows.get(numFemale))
       );
     }
+    fileScan.close();
 
     return totalPeople;
   }
 
-  public static void fillGenderArrays(
+
+  public static void fillGenderArrays(//sorting characters into passed in ArrayLists based on whether it is considered a girl, boy, or gender neutral character
     File f,
     ArrayList<String> girlCharacters,
     ArrayList<String> boyCharacters,
     ArrayList<String> genderNeutralCharacters,
     ArrayList<String> categories,
-    double limit
+    double limit//min name.gender absolute value needed for it to the character to not be considered gender neutral
+
   ) throws FileNotFoundException, NumberFormatException {
-    Scanner fileScan = new Scanner(f);
-    int charIndex = 0; //change to indexOf
-    int genderIndex = 5; //change to indexOf
-    double curGenderVal = 0.0;
+    Scanner fileScan = new Scanner(f);//creating a scanner object for the file
+
+    //originally these values were not hard coded, but I had to because of the indexOf issues talked about in the README
+    int charIndex = 0; //hardcoding the index of the characters to 0
+    int genderIndex = 5; //hardcoding the index of the characters to 0
+
+    double curGenderVal = 0.0;//declaring and initializing a current gender value holder for the current character being examined
     fileScan.nextLine();
 
-    while (fileScan.hasNextLine()) {
-      String[] row = fileScan.nextLine().split(",");
+    while (fileScan.hasNextLine()) {//until there are no more lines in the file
+      String[] row = fileScan.nextLine().split(",");//take the first row of the array (a string value) and passing in a delimiter (","), 
+        //that splits it into seperate indexes in the ArrayList
 
-      curGenderVal = Double.parseDouble(row[genderIndex]);
+      curGenderVal = Double.parseDouble(row[genderIndex]); //the current gender value is the value at the index of the genderIndex 
+      //(or in other words, the column of the name.gender column in the file), but parsed as a double
 
-      if (curGenderVal > Math.abs(limit)) {
-        boyCharacters.add(row[charIndex]);
-      } else if (curGenderVal < (-1 * Math.abs(limit))) {
-        girlCharacters.add(row[charIndex]);
-      } else {
-        genderNeutralCharacters.add(row[charIndex]);
+      if (curGenderVal > Math.abs(limit)) {//if the gender value is greater than the absolute value of limit
+        boyCharacters.add(row[charIndex]);//it's a predominately male character and is added toe the boyCharacters ArrayList 
+      } 
+      
+      else if (curGenderVal < (-1 * Math.abs(limit))) {//if the gender value is less than the (absolute value of limit * -1)
+        girlCharacters.add(row[charIndex]);//it's a predominately female character and is added toe the girlCharacters ArrayList 
+      } 
+      
+      else {
+        genderNeutralCharacters.add(row[charIndex]);//if the value is neither big nor small enough to fit into a gendered category
       }
     }
     fileScan.close();
@@ -206,7 +233,7 @@ public class DataAnalysisHanSurnames {
     Scanner fileScan = new Scanner(f);
     fileScan.nextLine();
 
-    while (fileScan.hasNextLine()) {
+    while (fileScan.hasNextLine()) {//until there are no more lines in the file
       ArrayList<String> rows = new ArrayList<String>(
         Arrays.asList(fileScan.nextLine().split(","))
       );
@@ -376,19 +403,6 @@ public class DataAnalysisHanSurnames {
     return index;
   }
 
-  public static int findSmallest(ArrayList<Integer> arr) { //returns index of the smallest number
-    int index = 0; //
-    int smallest = arr.get(0);
-    for (int i = 0; i < arr.size(); i++) {
-      if (arr.get(i) <= smallest) { //checking if element is smaller
-        smallest = arr.get(i);
-        //updates each time a smaller number is found
-        index = i; //records index of smallest number
-      }
-    }
-
-    return index;
-  }
 
   public static double getAverage(ArrayList<Double> values) {
     double total = values.get(0); //in case we have negative numbers
