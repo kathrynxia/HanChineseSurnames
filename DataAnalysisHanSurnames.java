@@ -22,18 +22,20 @@ public class DataAnalysisHanSurnames {
 
   //printAverageNameValues(givenName, nameTraits);
 
-  //compareCommonAverageCharacterRatings (givenName, 4, nameTraits);
+  //compareCommonAverageCharacterRatings (givenName, 4, nameTraits, "c");
 
    ArrayList<String> boyCharacters = new ArrayList<>();
     ArrayList<String> girlCharacters = new ArrayList<>();
     ArrayList<String> genderNeutralCharacters = new ArrayList<>();
 
-    ArrayList<String> categories = getColumns(baby);
+    ArrayList<String> categories = getColumns(givenName);
+    //System.out.println(categories.size());
+    //System.out.println(categories);
 
     //not 4, 10, 11, 12
 
     fillGenderArrays(
-      baby,
+      givenName,
       girlCharacters,
       boyCharacters,
       genderNeutralCharacters,
@@ -44,12 +46,25 @@ public class DataAnalysisHanSurnames {
 
   //System.out.println(boyCharacters);
   //System.out.println(createParallelArrayListDouble(baby, categories, boyCharacters, "name.valence", "character"));
+   //System.out.println(categories.indexOf("character"));
 
-  printAverageNameValues(baby, nameTraits);
-  compareCommonAverageCharacterRatings(baby, 3, nameTraits, "character");
+  // printAverageNameValues(baby, nameTraits);
+  // compareCommonAverageCharacterRatings(baby, 3, nameTraits, "character");
 
+
+ //printAverageNameValues(givenName, nameTraits);
+  compareCommonAverageCharacterRatings(givenName, 3, nameTraits, "character");
+  //System.out.println(createParallelArrayListDouble(givenName, categories, boyCharacters, "name.valence", "character"));//index ends up at -1
+  //System.out.println(createParallelArrayListDouble(givenName, categories, boyCharacters, "name.valence", "character"));
+  //System.out.println(createParallelArrayListDouble(givenName, categories, boyCharacters, "name.valence",  "c"));
+
+  System.out.println(findMostPopular(givenName, categories, 3));
 
     
+  // public static ArrayList<String> findMostPopular(
+  //   File f,
+  //   ArrayList<String> categories,
+  //   int length
 
      File top1000name = new File(
       "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/ChineseNames-main/data-csv/top1000name.prov.csv"
@@ -96,13 +111,13 @@ public class DataAnalysisHanSurnames {
             categories,
             girlCharacters,
             nameTraits[i],
-            "character"
+            0
           )
         )
       );
       boyValues.add(
         getAverage(
-          createParallelArrayListDouble(f, categories, boyCharacters, nameTraits[i], "character")
+          createParallelArrayListDouble(f, categories, boyCharacters, nameTraits[i], 0)
         )
       );
       genderNeutralValues.add(
@@ -112,7 +127,7 @@ public class DataAnalysisHanSurnames {
             categories,
             genderNeutralCharacters,
             nameTraits[i],
-            "character"
+            0
           )
         )
       );
@@ -132,21 +147,25 @@ public class DataAnalysisHanSurnames {
 
 
 
+ 
+
   public static void compareCommonAverageCharacterRatings (File givenName, int numItems, String[] nameTraits, String indName) throws FileNotFoundException{//compares the most common characters ratings with the highest rated characters
     ArrayList<String> categories = getColumns(givenName);
     ArrayList<String> mostPopular = findMostPopular(givenName, categories, numItems);
+    int ind = 0;
 
 
     for (int i = 0; i < nameTraits.length; i++){
+    ind = categories.indexOf(nameTraits[i]);
     System.out.println(nameTraits[i] + ": ");
     System.out.println("Most popular: " + mostPopular);
-    System.out.println(createParallelArrayListDouble (givenName, categories, mostPopular, nameTraits[i], indName));
+
+    System.out.println(createParallelArrayListDouble (givenName, categories, mostPopular, nameTraits[i], ind));
     System.out.println();
 
-    ArrayList<String> highestRanked = findHighestRanked(givenName, categories, numItems, nameTraits[i], indName);
-
+    ArrayList<String> highestRanked = findHighestRanked(givenName, categories, numItems, nameTraits[i], 0);
     System.out.println("Highest Ranked: " + highestRanked);
-    System.out.println(createParallelArrayListDouble (givenName, categories, highestRanked, nameTraits[i], indName));
+    System.out.println(createParallelArrayListDouble (givenName, categories, highestRanked, nameTraits[i], ind));
     System.out.println();
     System.out.println();
 
@@ -220,17 +239,19 @@ public class DataAnalysisHanSurnames {
     fileScan.close();
   }
 
-
-  public static ArrayList<Double> createParallelArrayListDouble(
-    File f, ArrayList<String> categories, ArrayList<String> characters, String category, String charIndexName
+ public static ArrayList<Double> createParallelArrayListDouble(
+    File f, ArrayList<String> categories, ArrayList<String> characters, String category, int index
   ) throws FileNotFoundException, NumberFormatException, IndexOutOfBoundsException {
 
-    int targetIndex = categories.indexOf(category);//index of the category we want to isolate
+    //int targetIndex = categories.indexOf(category);//index of the category we want to isolate
+    //int targetIndex = 23;
     ArrayList<Double> values2 = new ArrayList<>();//an array list to add the categories to
     double[] values = new double[characters.size()];
     String curString;
     String curValue;
-    int charIndex = categories.indexOf(charIndexName);
+    //int charIndex = categories.indexOf(charIndexName);
+    int charIndex = 0;
+    //System.out.println(charIndex);
 
     //ArrayList<String> rows = new ArrayList<>();
 
@@ -244,12 +265,23 @@ public class DataAnalysisHanSurnames {
       for(int i = 0; i < characters.size(); i++){
       curString = characters.get(i);
 
-      if ((rows.get(charIndex).equals(curString))) {
-        curValue = rows.get(targetIndex);
+      // System.out.println("*");
+      // System.out.println(curString);
+
+      //System.out.println(charIndex);
+
+      //System.out.println("*");
+      if ((rows.get(charIndex).equals(curString))) {//i think this is the problem
+      //System.out.println("%");
+      //System.out.println(rows.get(0));
+      // System.out.println((rows.get(0).equals(curString)));
+      
+        curValue = rows.get(index);
         // try {
         values[characters.indexOf(curString)] = Double.parseDouble(curValue);
 
       }
+
 
       }
 
@@ -272,9 +304,10 @@ public class DataAnalysisHanSurnames {
     File f,
     ArrayList<String> categories,
     ArrayList<String> characters,
-    String category
+    String category,
+    int index
   ) throws FileNotFoundException, NumberFormatException {
-    int targetIndex = categories.indexOf(category);
+    //int targetIndex = categories.indexOf(category);
 
     ArrayList<Integer> values = new ArrayList<>();
 
@@ -295,8 +328,7 @@ public class DataAnalysisHanSurnames {
 
       if ((rows.indexOf(characters.get(count))) != -1) {
     
-          values.add(Integer.parseInt((rows.get(targetIndex))));
-        
+          values.add(Integer.parseInt((rows.get(index))));
 
         count++;
       }
@@ -309,12 +341,13 @@ public class DataAnalysisHanSurnames {
     return values;
   }
 
-  public static ArrayList<String> createParallelArrayListString(
+  public static ArrayList<String> createParallelArrayListString(//returns a arraylist of all the characters in the dataset
     File f,
     ArrayList<String> categories,
-    String category
+    int index
   ) throws FileNotFoundException {
-    int targetIndex = categories.indexOf(category);
+    //int targetIndex = categories.indexOf(category);
+    int charIndex = 0;
 
     ArrayList<String> values = new ArrayList<>();
 
@@ -328,7 +361,7 @@ public class DataAnalysisHanSurnames {
         Arrays.asList(fileScan.nextLine().split(","))
       );
 
-      values.add(rows.get(targetIndex));
+      values.add(rows.get(index));
     }
 
     fileScan.close();
@@ -348,8 +381,10 @@ public class DataAnalysisHanSurnames {
     ArrayList<String> allCharacters = createParallelArrayListString(
       f,
       categories,
-      "character"
+      0
     );
+
+    //System.out.println(allCharacters);
 
     ArrayList<Integer> totalNum = getTotalPeople(f, categories);
 
@@ -373,18 +408,17 @@ public class DataAnalysisHanSurnames {
     ArrayList<String> categories,
     int length,
     String category,
-    String charIndexName
+    int charIndex
   ) throws FileNotFoundException {
-    int charIndex = categories.indexOf(charIndexName);
     ArrayList<String> allCharacters = createParallelArrayListString(
       f,
       categories,
-      charIndexName
+      charIndex
     );
 
     ArrayList<String> highestRanked = new ArrayList<>();
 
-    ArrayList<Double> charValues = createParallelArrayListDouble(f, categories, allCharacters, category, charIndexName);
+    ArrayList<Double> charValues = createParallelArrayListDouble(f, categories, allCharacters, category, charIndex);
 
     for (int i = 0; i < length; i++) {
       highestRanked.add(allCharacters.get(findMaxDouble(charValues)));
