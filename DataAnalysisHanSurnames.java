@@ -15,14 +15,14 @@ public class DataAnalysisHanSurnames {
     //name valence: positivity of character meaning), name warmth/morality: warmness, name competence: assertiveness
 
     //printAverageNameValues(givenName, nameTraits);
-    File baby = new File(
-      "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
-    );
+    // File baby = new File(
+    //   "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
+    // );
 
 
+  //printAverageNameValues(givenName, nameTraits);
 
-
-  compareCommonAverageCharacterRatings (baby, 4, nameTraits);
+  compareCommonAverageCharacterRatings (givenName, 4, nameTraits);
 
   //  ArrayList<String> boyCharacters = new ArrayList<>();
   //   ArrayList<String> girlCharacters = new ArrayList<>();
@@ -131,7 +131,6 @@ public class DataAnalysisHanSurnames {
     
 
 
-
     for (int i = 0; i < nameTraits.length; i++){
     System.out.println(nameTraits[i] + ": ");
     System.out.println("Most popular: " + mostPopular);
@@ -142,19 +141,17 @@ public class DataAnalysisHanSurnames {
 
     System.out.println("Highest Ranked: " + highestRanked);
 
-    System.out.println(createParallelArrayListDouble (givenName, categories, highestRanked, nameTraits[i]));
+    //System.out.println(createParallelArrayListDouble (givenName, categories, highestRanked, nameTraits[i]));
     System.out.println();
     System.out.println();
 
     }
-
-
-
+  }
 
 
 
   
-  }
+  
 
 
 
@@ -182,6 +179,8 @@ public class DataAnalysisHanSurnames {
 
     return totalPeople;
   }
+
+
 
   public static void fillGenderArrays(
     File f,
@@ -218,11 +217,9 @@ public class DataAnalysisHanSurnames {
 
 
   public static ArrayList<Double> createParallelArrayListDouble(
-    File f,
-    ArrayList<String> categories,
-    ArrayList<String> characters,
-    String category
+    File f, ArrayList<String> categories, ArrayList<String> characters,String category
   ) throws FileNotFoundException, NumberFormatException {
+
     int targetIndex = categories.indexOf(category);
     ArrayList<Double> values2 = new ArrayList<>();
     double[] values = new double[characters.size()];
@@ -311,6 +308,8 @@ public class DataAnalysisHanSurnames {
       }
     }
 
+
+
     fileScan.close();
 
     return values;
@@ -342,6 +341,10 @@ public class DataAnalysisHanSurnames {
 
     return values;
   }
+
+
+
+
 
   public static ArrayList<String> findMostPopular(
     File f,
@@ -414,6 +417,9 @@ public class DataAnalysisHanSurnames {
     return index;
   }
 
+
+
+
     public static int findMaxDouble(ArrayList<Double> arr) {
     int index = 0; //
     double largest = arr.get(0);
@@ -428,6 +434,8 @@ public class DataAnalysisHanSurnames {
     return index;
   }
 
+
+
   public static int findSmallest(ArrayList<Integer> arr) { //returns index of the smallest number
     int index = 0; //
     int smallest = arr.get(0);
@@ -441,6 +449,9 @@ public class DataAnalysisHanSurnames {
 
     return index;
   }
+
+
+
 
   public static double getAverage(ArrayList<Double> values) {
     double total = values.get(0); //in case we have negative numbers
