@@ -15,33 +15,35 @@ public class DataAnalysisHanSurnames {
     //name valence: positivity of character meaning), name warmth/morality: warmness, name competence: assertiveness
 
     //printAverageNameValues(givenName, nameTraits);
-    // File baby = new File(
-    //   "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
-    // );
+    File baby = new File(
+      "/Users/kxia/CSSeminar/Unit1/HanChineseSurnames/BabyDataSet.csv"
+    );
 
 
   //printAverageNameValues(givenName, nameTraits);
 
-  compareCommonAverageCharacterRatings (givenName, 4, nameTraits);
+  //compareCommonAverageCharacterRatings (givenName, 4, nameTraits);
 
-  //  ArrayList<String> boyCharacters = new ArrayList<>();
-  //   ArrayList<String> girlCharacters = new ArrayList<>();
-  //   ArrayList<String> genderNeutralCharacters = new ArrayList<>();
+   ArrayList<String> boyCharacters = new ArrayList<>();
+    ArrayList<String> girlCharacters = new ArrayList<>();
+    ArrayList<String> genderNeutralCharacters = new ArrayList<>();
 
-  //   ArrayList<String> categories = getColumns(baby);
+    ArrayList<String> categories = getColumns(baby);
 
-  //   //not 4, 10, 11, 12
+    //not 4, 10, 11, 12
 
-  //   fillGenderArrays(
-  //     baby,
-  //     girlCharacters,
-  //     boyCharacters,
-  //     genderNeutralCharacters,
-  //     categories,
-  //     0.250
-  //   );
+    fillGenderArrays(
+      baby,
+      girlCharacters,
+      boyCharacters,
+      genderNeutralCharacters,
+      categories,
+      0.250
+    );
 
-  //   System.out.println(createParallelArrayListDouble(baby, categories, girlCharacters, "name.valence"));
+
+    System.out.println(girlCharacters);
+   System.out.println(createParallelArrayListDouble(baby, categories, girlCharacters, "name.valence", "character"));
 
     
 
@@ -89,13 +91,14 @@ public class DataAnalysisHanSurnames {
             f,
             categories,
             girlCharacters,
-            nameTraits[i]
+            nameTraits[i],
+            "character"
           )
         )
       );
       boyValues.add(
         getAverage(
-          createParallelArrayListDouble(f, categories, boyCharacters, nameTraits[i])
+          createParallelArrayListDouble(f, categories, boyCharacters, nameTraits[i], "character")
         )
       );
       genderNeutralValues.add(
@@ -104,7 +107,8 @@ public class DataAnalysisHanSurnames {
             f,
             categories,
             genderNeutralCharacters,
-            nameTraits[i]
+            nameTraits[i],
+            "character"
           )
         )
       );
@@ -134,10 +138,10 @@ public class DataAnalysisHanSurnames {
     for (int i = 0; i < nameTraits.length; i++){
     System.out.println(nameTraits[i] + ": ");
     System.out.println("Most popular: " + mostPopular);
-    System.out.println(createParallelArrayListDouble (givenName, categories, mostPopular, nameTraits[i]));
+    System.out.println(createParallelArrayListDouble (givenName, categories, mostPopular, nameTraits[i], "character"));
     System.out.println();
 
-    ArrayList<String> highestRanked = findHighestRanked(givenName, categories, numItems, nameTraits[i]);
+    ArrayList<String> highestRanked = findHighestRanked(givenName, categories, numItems, nameTraits[i], "character");
 
     System.out.println("Highest Ranked: " + highestRanked);
 
@@ -217,34 +221,33 @@ public class DataAnalysisHanSurnames {
 
 
   public static ArrayList<Double> createParallelArrayListDouble(
-    File f, ArrayList<String> categories, ArrayList<String> characters,String category
-  ) throws FileNotFoundException, NumberFormatException {
+    File f, ArrayList<String> categories, ArrayList<String> characters, String category, String charIndexName
+  ) throws FileNotFoundException, NumberFormatException, IndexOutOfBoundsException {
 
-    int targetIndex = categories.indexOf(category);
-    ArrayList<Double> values2 = new ArrayList<>();
-    double[] values = new double[characters.size()];
+    int targetIndex = categories.indexOf(category);//index of the category we want to isolate
+    ArrayList<Double> values2 = new ArrayList<>();//an array list to add the categories to
+    //double[] values = new double[characters.size()];
+    String curString;
+    String curValue;
+    int charIndex = categories.indexOf(charIndexName);
 
     //ArrayList<String> rows = new ArrayList<>();
 
     Scanner fileScan = new Scanner(f);
-
-    int count = 0;
     fileScan.nextLine();
 
     while (fileScan.hasNextLine()) {
 
-      if (count == characters.size()) {
-        break;
-      }
-
       ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
 
       for(int i = 0; i < characters.size(); i++){
+      curString = characters.get(i);
 
-      if ((rows.indexOf(characters.get(i))) != -1) {
-        String char1 = characters.get(i);
+
+      if ((rows.get(charIndex).equals(curString))) {
+        curValue = rows.get(targetIndex);
         // try {
-        values[characters.indexOf(char1)] = Double.parseDouble((rows.get(targetIndex)));
+        values2.add(Double.parseDouble(curValue));//I am getting a string, which String? The string at the parget index
         // }
 
         // catch (Exception e) {
@@ -253,8 +256,10 @@ public class DataAnalysisHanSurnames {
 
         // }
 
-        count++;
+        //count++;
       }
+
+
 
 
       }
@@ -263,9 +268,9 @@ public class DataAnalysisHanSurnames {
 
     fileScan.close();
 
-    for (int j = 0; j < values.length; j++){
-      values2.add(values[j]);
-    }
+    // for (int j = 0; j < values.length; j++){
+    //   values2.add(values[j]);
+    // }
 
     return values2;
   }
@@ -378,17 +383,19 @@ public class DataAnalysisHanSurnames {
     File f,
     ArrayList<String> categories,
     int length,
-    String category
+    String category,
+    String charIndexName
   ) throws FileNotFoundException {
+    int charIndex = categories.indexOf(charIndexName);
     ArrayList<String> allCharacters = createParallelArrayListString(
       f,
       categories,
-      "character"
+      charIndexName
     );
 
     ArrayList<String> highestRanked = new ArrayList<>();
 
-    ArrayList<Double> charValues = createParallelArrayListDouble(f, categories, allCharacters, category);
+    ArrayList<Double> charValues = createParallelArrayListDouble(f, categories, allCharacters, category, charIndexName);
 
     for (int i = 0; i < length; i++) {
       highestRanked.add(allCharacters.get(findMaxDouble(charValues)));
