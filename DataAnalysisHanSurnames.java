@@ -213,83 +213,88 @@ public class DataAnalysisHanSurnames {
         genderNeutralCharacters.add(row[charIndex]);//if the value is neither big nor small enough to fit into a gendered category
       }
     }
-    fileScan.close();
+    fileScan.close();//closing the scanner
   }
 
-  public static ArrayList<Double> createParallelArrayListDouble(
+  public static ArrayList<Double> createParallelArrayListDouble(//returns an arraylist because I wanted to keep things consistent, 
+  //but uses an array to help because I wanted a set length I could index into easily
     File f,
     ArrayList<String> categories,
     ArrayList<String> characters,
     String category,
     int index
   ) throws FileNotFoundException, NumberFormatException {
-    ArrayList<Double> values2 = new ArrayList<>(); //an array list to add the categories to
+    ArrayList<Double> values2 = new ArrayList<>(); //an array list that the array will be converted to at the end
     double[] values = new double[characters.size()];
-    String curString;
-    String curValue;
-    //int charIndex = categories.indexOf(charIndexName);
-    int charIndex = 0;
+    String curString;//intializing a current String variable
+    String curValue;//intializing a current value variable, which will be parsed as a Double
+
+    int charIndex = 0;//had to hard code this
 
     Scanner fileScan = new Scanner(f);
     fileScan.nextLine();
 
     while (fileScan.hasNextLine()) {//until there are no more lines in the file
-      ArrayList<String> rows = new ArrayList<String>(
+      ArrayList<String> rows = new ArrayList<String>(//take the first row of the array (a string value) and passing in a delimiter (","), 
+      //that splits it into seperate indexes in the ArrayList
         Arrays.asList(fileScan.nextLine().split(","))
       );
 
-      for (int i = 0; i < characters.size(); i++) {
-        curString = characters.get(i);
+      for (int i = 0; i < characters.size(); i++) {//go through the character array and compare each character to the Strng at charIndex
+      //I am not writing thousands of if statements
+        curString = characters.get(i);//character in each row is being compared to all the characters in the characters ArrayList that was passed in
 
-        if ((rows.get(charIndex).equals(curString))) { //This was a problem line
-          curValue = rows.get(index);
-          values[characters.indexOf(curString)] = Double.parseDouble(curValue);
+        if ((rows.get(charIndex).equals(curString))) { //This was a problematic line, if statement will execute if the character in the 
+        //current row is equal to any character in the character ArrayList
+          curValue = rows.get(index);//get the current character in the row
+          values[characters.indexOf(curString)] = Double.parseDouble(curValue);//stores it's corresponding value in category(parameter) in the values array
+          //at the same index that it was in in the character ArrayList
         }
       }
     }
 
     fileScan.close();
 
-    for (int j = 0; j < values.length; j++) {
+    for (int j = 0; j < values.length; j++) {//adding the elements of the value array into the value2 ArrayList
       values2.add(values[j]);
     }
 
     return values2;
   }
 
-  public static ArrayList<Integer> createParallelArrayListInt(
-    File f,
-    ArrayList<String> categories,
-    ArrayList<String> characters,
-    String category,
-    int index
-  ) throws FileNotFoundException, NumberFormatException {
-    ArrayList<Integer> values = new ArrayList<>();
+  // public static ArrayList<Integer> createParallelArrayListInt(//i actally don't use this method at all
+  //   File f,
+  //   ArrayList<String> categories,
+  //   ArrayList<String> characters,
+  //   String category,
+  //   int index
+  // ) throws FileNotFoundException, NumberFormatException {
+  //   ArrayList<Integer> values = new ArrayList<>();
 
-    Scanner fileScan = new Scanner(f);
+  //   Scanner fileScan = new Scanner(f);
 
-    int count = 0;
+  //   int count = 0;
 
-    while (fileScan.hasNextLine()) {
-      if (count == characters.size()) {
-        break;
-      }
+  //   while (fileScan.hasNextLine()) {
+  //     if (count == characters.size()) {
+  //       break;
+  //     }
 
-      ArrayList<String> rows = new ArrayList<String>(
-        Arrays.asList(fileScan.nextLine().split(","))
-      );
+  //     ArrayList<String> rows = new ArrayList<String>(
+  //       Arrays.asList(fileScan.nextLine().split(","))
+  //     );
 
-      if ((rows.indexOf(characters.get(count))) != -1) {
-        values.add(Integer.parseInt((rows.get(index))));
+  //     if ((rows.indexOf(characters.get(count))) != -1) {
+  //       values.add(Integer.parseInt((rows.get(index))));
 
-        count++;
-      }
-    }
+  //       count++;
+  //     }
+  //   }
 
-    fileScan.close();
+  //   fileScan.close();
 
-    return values;
-  }
+  //   return values;
+  // }
 
   public static ArrayList<String> createParallelArrayListString( //returns a arraylist of all the characters in the dataset
     File f,
