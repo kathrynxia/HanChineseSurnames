@@ -15,7 +15,7 @@ public class DataAnalysisHanSurnames {
     //name valence: positivity of character meaning), name warmth/morality: warmness, name competence: assertiveness
 
     printAverageNameValues(givenName, nameTraits); //finds the average name.valence, name.competence, and name.warmth for boys, girls, and gender neutral characters
-    compareCommonAverageCharacterRatings(givenName, 3, nameTraits, "character"); //compares the 3 most popular characters to the 3 highest rated characters in terms of nameTraits
+    compareCommonAverageCharacterRatings(givenName, 10, nameTraits, "character"); //compares the 3 most popular characters to the 3 highest rated characters in terms of nameTraits
   }
 
   public static void printAverageNameValues(File f, String[] nameTraits)
@@ -108,6 +108,8 @@ public class DataAnalysisHanSurnames {
     );//getting the most popular characters, length is numItems
 
     ArrayList<String> highestRanked = new ArrayList<>();//empty ArrayList that will be added to
+    ArrayList<Double> popularValues = new ArrayList<>();
+     ArrayList<Double> highestRankedValues = new ArrayList<>();
     int ind = 0;//index variable
 
     for (int i = 0; i < nameTraits.length; i++) {//printing for each of the strings in the nameTraits array
@@ -116,31 +118,33 @@ public class DataAnalysisHanSurnames {
       System.out.println("Most popular: " + mostPopular);//prints the most popular characters 
 
       //prints the trait value for each of the most popular characters
-      System.out.println(
-        createParallelArrayListDouble(
+      popularValues =  createParallelArrayListDouble(
           givenName,
           categories,
           mostPopular,
           nameTraits[i],
           ind
-        )
-      );
+        );
+
+      System.out.println(popularValues);
+      System.out.println("Average: " + getAverage(popularValues));
       System.out.println();
+      
 
 
-      highestRanked =
-        findHighestRanked(givenName, categories, numItems, nameTraits[i], ind);//getting the #numItems highest ranking characters
+      highestRanked = findHighestRanked(givenName, categories, numItems, nameTraits[i], ind);//getting the #numItems highest ranking characters
       System.out.println("Highest ranked: " + highestRanked);
-      //printing the values for the #numItems highest ranking characters for each trait
-      System.out.println(
-        createParallelArrayListDouble(
+      highestRankedValues = createParallelArrayListDouble(
           givenName,
           categories,
           highestRanked,
           nameTraits[i],
           ind
-        )
-      );
+        );
+      //printing the values for the #numItems highest ranking characters for each trait
+      System.out.println(highestRankedValues);
+
+      System.out.println("Average: " + getAverage(highestRankedValues));
       System.out.println();
       System.out.println();
       System.out.println();
