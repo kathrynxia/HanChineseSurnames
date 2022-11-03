@@ -130,7 +130,7 @@ public class DataAnalysisHanSurnames {
 
       highestRanked =
         findHighestRanked(givenName, categories, numItems, nameTraits[i], ind);//getting the #numItems highest ranking characters
-      System.out.println("Highest Ranked: " + highestRanked);
+      System.out.println("Highest ranked: " + highestRanked);
       //printing the values for the #numItems highest ranking characters for each trait
       System.out.println(
         createParallelArrayListDouble(
@@ -218,6 +218,7 @@ public class DataAnalysisHanSurnames {
 
   public static ArrayList<Double> createParallelArrayListDouble(//returns an arraylist because I wanted to keep things consistent, 
   //but uses an array to help because I wanted a set length I could index into easily
+  //returns an parallell ArrayList of doubles corresponding to the column and characters passed in 
     File f,
     ArrayList<String> categories,
     ArrayList<String> characters,
@@ -262,58 +263,33 @@ public class DataAnalysisHanSurnames {
     return values2;
   }
 
-  // public static ArrayList<Integer> createParallelArrayListInt(//i actally don't use this method at all
-  //   File f,
-  //   ArrayList<String> categories,
-  //   ArrayList<String> characters,
-  //   String category,
-  //   int index
-  // ) throws FileNotFoundException, NumberFormatException {
-  //   ArrayList<Integer> values = new ArrayList<>();
-
-  //   Scanner fileScan = new Scanner(f);
-
-  //   int count = 0;
-
-  //   while (fileScan.hasNextLine()) {
-  //     if (count == characters.size()) {
-  //       break;
-  //     }
-
-  //     ArrayList<String> rows = new ArrayList<String>(
-  //       Arrays.asList(fileScan.nextLine().split(","))
-  //     );
-
-  //     if ((rows.indexOf(characters.get(count))) != -1) {
-  //       values.add(Integer.parseInt((rows.get(index))));
-
-  //       count++;
-  //     }
-  //   }
-
-  //   fileScan.close();
-
-  //   return values;
-  // }
-
-  public static ArrayList<String> createParallelArrayListString( //returns a arraylist of all the characters in the dataset
+  public static ArrayList<Integer> createParallelArrayListInt(//i actally don't use this method at all
     File f,
     ArrayList<String> categories,
+    ArrayList<String> characters,
+    String category,
     int index
-  ) throws FileNotFoundException {
-    int charIndex = 0;
-
-    ArrayList<String> values = new ArrayList<>();
+  ) throws FileNotFoundException, NumberFormatException {
+    ArrayList<Integer> values = new ArrayList<>();
 
     Scanner fileScan = new Scanner(f);
-    fileScan.nextLine();
+
+    int count = 0;
 
     while (fileScan.hasNextLine()) {
+      if (count == characters.size()) {
+        break;
+      }
+
       ArrayList<String> rows = new ArrayList<String>(
         Arrays.asList(fileScan.nextLine().split(","))
       );
 
-      values.add(rows.get(index));
+      if ((rows.indexOf(characters.get(count))) != -1) {
+        values.add(Integer.parseInt((rows.get(index))));
+
+        count++;
+      }
     }
 
     fileScan.close();
@@ -321,7 +297,35 @@ public class DataAnalysisHanSurnames {
     return values;
   }
 
-  public static ArrayList<String> findMostPopular(
+  public static ArrayList<String> createParallelArrayListString( //returns a arraylist of all the characters in the dataset
+    File f,
+    ArrayList<String> categories,
+    int index
+  ) throws FileNotFoundException {
+    int charIndex = 0;//hard coding the character index
+
+    ArrayList<String> values = new ArrayList<>();//empty ArrayList to hold Strings
+
+    Scanner fileScan = new Scanner(f);//new s
+    fileScan.nextLine();
+
+    while (fileScan.hasNextLine()) {//until there are no more lines in the file
+      ArrayList<String> rows = new ArrayList<String>(//take the first row of the array (a string value) and passing in a delimiter (","), 
+      //that splits it into seperate indexes in the ArrayList
+        Arrays.asList(fileScan.nextLine().split(","))
+      );
+
+      values.add(rows.get(index));//adding the string at in the specified index to the ArrayList values
+    }
+
+    fileScan.close();
+
+    return values;
+  }
+
+  public static ArrayList<String> findMostPopular(//could have tried to make it in the same method as findHighestRanked, 
+  //but did not because the parallel arrays are derived differently (for findMostPopular you have to add two categories together)
+  //parallel arrays aree different data types totalNum is Integer, and createParallelArrayListDouble is Double
     File f,
     ArrayList<String> categories,
     int length
@@ -329,23 +333,24 @@ public class DataAnalysisHanSurnames {
     ArrayList<String> allCharacters = createParallelArrayListString(
       f,
       categories,
-      0
+      0//hard coding in the zero because my computer wouldn't have it any other way
     );
 
-    ArrayList<Integer> totalNum = getTotalPeople(f, categories);
+    ArrayList<Integer> totalNum = getTotalPeople(f, categories);//getting the total number of people that have a given character for each character in the array
 
     ArrayList<String> mostPopularChars = new ArrayList<>();
 
-    for (int i = 0; i < length; i++) {
-      mostPopularChars.add(allCharacters.get(findMax(totalNum)));
-      allCharacters.remove(findMax(totalNum));
-      totalNum.remove(findMax(totalNum));
+    for (int i = 0; i < length; i++) {//for each element in the 
+      mostPopularChars.add(allCharacters.get(findMax(totalNum)));//add the character with the highest total number of people
+      allCharacters.remove(findMax(totalNum));//remove the character with the most people
+      totalNum.remove(findMax(totalNum));//remove the number of people with that character from the totalNum parallel array
     }
 
     return mostPopularChars;
   }
 
-  public static ArrayList<String> findHighestRanked(
+
+  public static ArrayList<String> findHighestRanked(//get the length number of the highest ranked characters, put them in an ArrayList, and returns them
     File f,
     ArrayList<String> categories,
     int length,
@@ -359,7 +364,7 @@ public class DataAnalysisHanSurnames {
       0
     );
 
-    int max = 0;
+    int max = 0;//declaring and initializing, will hold the index of the largest value of the charValues ArrayList
     ArrayList<String> highestRanked = new ArrayList<>();
 
     ArrayList<Double> charValues = createParallelArrayListDouble(
@@ -372,18 +377,18 @@ public class DataAnalysisHanSurnames {
 
     for (int i = length - 1; i >= 0; i--) {
       max = findMaxDouble(charValues);
-      highestRanked.add(allCharacters.get(max));
-      allCharacters.remove(max);
-      charValues.remove(max);
+      highestRanked.add(allCharacters.get(max));//find the character with the largest value in category (instance var), add it to highestRanked Arraylist
+      allCharacters.remove(max);//remove the character from the allCharacters arraylist
+      charValues.remove(max);//remove the character's corresponding value from the charValues arraylist
     }
 
     return highestRanked;
   }
 
-  public static int findMax(ArrayList<Integer> arr) {
+  public static int findMax(ArrayList<Integer> arr) {//finds the largeset Integer in an arraylist, returns the index of it
     int index = 0; //
-    int largest = arr.get(0);
-    for (int i = 0; i < arr.size(); i++) {
+    int largest = arr.get(0);//initialize largest value to the value at index 0
+    for (int i = 0; i < arr.size(); i++) {//go through each element
       if (arr.get(i) >= largest) { //checking if element is smaller
         largest = arr.get(i);
         //updates each time a smaller number is found
@@ -394,10 +399,10 @@ public class DataAnalysisHanSurnames {
     return index;
   }
 
-  public static int findMaxDouble(ArrayList<Double> arr) {
+  public static int findMaxDouble(ArrayList<Double> arr) {//finds the largeset Double in an arraylist, returns the index of it
     int index = 0; //
-    double largest = arr.get(0);
-    for (int i = 0; i < arr.size(); i++) {
+    double largest = arr.get(0);//initialize largest value to the value at index 0
+    for (int i = 0; i < arr.size(); i++) {//go through each element
       if (arr.get(i) > largest) { //checking if element is smaller
         largest = arr.get(i);
         //updates each time a smaller number is found
@@ -410,21 +415,21 @@ public class DataAnalysisHanSurnames {
 
 
   public static double getAverage(ArrayList<Double> values) {
-    double total = values.get(0); //in case we have negative numbers
+    double total = values.get(0); //declare and initialize total variable, setting it to the first index. 
 
-    for (int i = 1; i < values.size(); i++) {
-      total += values.get(i);
+    for (int i = 1; i < values.size(); i++) {//going through each of the indexes beside 0
+      total += values.get(i); //adding to the total variable
     }
-    return total / values.size();
+    return total / values.size();//dividing by number of elements in values
   }
 
   public static ArrayList<String> getColumns(File f)
     throws FileNotFoundException {
-    Scanner fileScan = new Scanner(f); //anonymous object
+    Scanner fileScan = new Scanner(f); //new scanner
 
     String[] firstLineArr = fileScan.nextLine().split(","); //assumes first line is header, grabs it and splits it by comma
 
-    ArrayList<String> headers = new ArrayList<>(Arrays.asList(firstLineArr));
+    ArrayList<String> headers = new ArrayList<>(Arrays.asList(firstLineArr));//make firstLineArr an array list
 
     fileScan.close();
 
