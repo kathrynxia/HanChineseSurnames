@@ -15,8 +15,10 @@ public class DataAnalysisHanSurnames {
     //name valence: positivity of character meaning), name warmth/morality: warmness, name competence: assertiveness
 
     printAverageNameValues(givenName, nameTraits); //finds the average name.valence, name.competence, and name.warmth for boys, girls, and gender neutral characters
-    compareCommonAverageCharacterRatings(givenName, 10, nameTraits, "character"); //compares the 3 most popular characters to the 3 highest rated characters in terms of nameTraits
+    compareCommonAverageCharacterRatings(givenName, 10, nameTraits); //compares the 3 most popular characters to the 3 highest rated characters in terms of nameTraits
   }
+
+
 
   public static void printAverageNameValues(File f, String[] nameTraits)
     throws FileNotFoundException {//throwing the exception in case the file does not exist
@@ -95,8 +97,7 @@ public class DataAnalysisHanSurnames {
   public static void compareCommonAverageCharacterRatings(//compares the most common characters ratings with the highest rated characters
     File givenName,
     int numItems,
-    String[] nameTraits,
-    String indName
+    String[] nameTraits
   ) throws FileNotFoundException { 
 
     ArrayList<String> categories = getColumns(givenName);//getting the categories
@@ -272,7 +273,6 @@ public class DataAnalysisHanSurnames {
     ArrayList<String> categories,
     int index
   ) throws FileNotFoundException {
-    int charIndex = 0;//hard coding the character index
 
     ArrayList<String> values = new ArrayList<>();//empty ArrayList to hold Strings
 
@@ -280,11 +280,9 @@ public class DataAnalysisHanSurnames {
     fileScan.nextLine();
 
     while (fileScan.hasNextLine()) {//until there are no more lines in the file
-      ArrayList<String> rows = new ArrayList<String>(//take the first row of the array (a string value) and passing in a delimiter (","), 
-      //that splits it into seperate indexes in the ArrayList
-        Arrays.asList(fileScan.nextLine().split(","))
-      );
-
+    //take the first row of the array (a string value) and passing in a delimiter (","),  that splits it into seperate indexes in the ArrayList
+    
+      ArrayList<String> rows = new ArrayList<String>(Arrays.asList(fileScan.nextLine().split(",")));
       values.add(rows.get(index));//adding the string at in the specified index to the ArrayList values
     }
 
