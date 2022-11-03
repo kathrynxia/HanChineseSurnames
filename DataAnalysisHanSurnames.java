@@ -124,10 +124,10 @@ public class DataAnalysisHanSurnames {
           mostPopular,
           nameTraits[i],
           ind
-        );
+        );//creating a parallel array list
 
       System.out.println(popularValues);
-      System.out.println("Average: " + getAverage(popularValues));
+      System.out.println("Average: " + getAverage(popularValues));//calculating the average of values in the array list
       System.out.println();
       
 
@@ -142,9 +142,9 @@ public class DataAnalysisHanSurnames {
           ind
         );
       //printing the values for the #numItems highest ranking characters for each trait
-      System.out.println(highestRankedValues);
+      System.out.println(highestRankedValues);//creating a parallel array list
 
-      System.out.println("Average: " + getAverage(highestRankedValues));
+      System.out.println("Average: " + getAverage(highestRankedValues));//calculating the average of values in the array list
       System.out.println();
       System.out.println();
       System.out.println();
@@ -265,40 +265,6 @@ public class DataAnalysisHanSurnames {
     }
 
     return values2;
-  }
-
-  public static ArrayList<Integer> createParallelArrayListInt(//i actally don't use this method at all
-    File f,
-    ArrayList<String> categories,
-    ArrayList<String> characters,
-    String category,
-    int index
-  ) throws FileNotFoundException, NumberFormatException {
-    ArrayList<Integer> values = new ArrayList<>();
-
-    Scanner fileScan = new Scanner(f);
-
-    int count = 0;
-
-    while (fileScan.hasNextLine()) {
-      if (count == characters.size()) {
-        break;
-      }
-
-      ArrayList<String> rows = new ArrayList<String>(
-        Arrays.asList(fileScan.nextLine().split(","))
-      );
-
-      if ((rows.indexOf(characters.get(count))) != -1) {
-        values.add(Integer.parseInt((rows.get(index))));
-
-        count++;
-      }
-    }
-
-    fileScan.close();
-
-    return values;
   }
 
   public static ArrayList<String> createParallelArrayListString( //returns a arraylist of all the characters in the dataset
